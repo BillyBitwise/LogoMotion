@@ -10,7 +10,6 @@
 // *****************************************************************
 
 // ***  Global Variables  ***
-let   logoIndex=0;
 
 const baseball=[
     {name:'Boston',
@@ -419,32 +418,7 @@ const landmarks=[
 
 ];
 
-// const logos=[
-//   {name:'MasterCard',
-//    source:'https://s3-symbol-logo.tradingview.com/mastercard--big.svg'},
-//   {name:'Amazon',
-//    source:'https://s3-symbol-logo.tradingview.com/amazon--big.svg'},
-//   {name:'Shopify',
-//   source:'https://s3-symbol-logo.tradingview.com/shopify--big.svg'},
-//   {name:'Google',
-//   source:'https://s3-symbol-logo.tradingview.com/alphabet--big.svg'},
-//   {name:'MicroSoft',
-//    source:'https://s3-symbol-logo.tradingview.com/microsoft--big.svg'},
-//   {name:'Nvidia',
-//    source:'https://s3-symbol-logo.tradingview.com/nvidia--big.svg'},
-//   {name:'Apple',
-//   source:'https://s3-symbol-logo.tradingview.com/apple--big.svg'},
-//   {name:'Netflix',
-//    source:'https://s3-symbol-logo.tradingview.com/netflix--big.svg'},
-//   {name:'Tesla',
-//   source:'https://s3-symbol-logo.tradingview.com/tesla--big.svg'},
-//   {name:'Meta',
-//   source:'https://s3-symbol-logo.tradingview.com/meta-platforms--big.svg'},
-//   {name:'Pittsburg',
-//    source:'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT1_1hd20Qw9mNfWOmhjGZj8jVIEsU0QQyvzw&s'}  
-// ];
-
-const logos=[
+const corporate=[
     {name:'MasterCard',
     source:'https://s3-symbol-logo.tradingview.com/mastercard--big.svg'},
     {name:'Amazon',
@@ -547,14 +521,6 @@ const logos=[
     source:'https://cdn.mos.cms.futurecdn.net/z3bn6deaxmrjmQHNEkpcZE-1000-80.jpg'},
     {name:'Facebook',
     source:'https://upload.wikimedia.org/wikipedia/en/thumb/0/04/Facebook_f_logo_%282021%29.svg/1024px-Facebook_f_logo_%282021%29.svg.png'},
-    {name:'New York Yankees',
-    source:'https://img.icons8.com/ios7/1200/new-york-yankee.jpg'},
-    {name:'Real Madrid',
-    source:'https://static.vecteezy.com/system/resources/thumbnails/010/994/249/small_2x/real-madrid-logo-symbol-design-spain-football-european-countries-football-teams-illustration-free-vector.jpg'},
-    {name:'Chicago Bulls',
-    source:'https://i.ebayimg.com/images/g/DM0AAOSwF2xbUkZj/s-l1200.jpg'},
-    {name:'Toronto Blue Jays',
-    source:'https://namakabottles.com/cdn/shop/collections/Blue-Jays_1400x.jpg?v=1695057232'},
     {name:'Republican',
     source:'https://thumbs.dreamstime.com/b/republican-party-logo-elephant-also-referred-to-as-gop-one-two-major-contemporary-political-parties-united-states-201271064.jpg'},
     {name:'Android',
@@ -669,18 +635,30 @@ const logos=[
     source:'https://cdn.siasat.com/wp-content/uploads/2023/04/dogecoin.jpg'},
     {name:'Aphex Twin',
     source:'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTpDngpnffHkY0VT1HLgu8kdAqnHL2HELqJag&s'},
-    
+
 ];
 
-const logoMax=logos.length-1;
+const logoArrays=[
+    corporate,
+    landmarks,
+    baseball,
+    basketball,
+    football,
+    hockey
+];
+
+let logoIndex=0;
+let gameOver=false;
+let transition= true;
+let logos=logoArrays[1];
+let logoMax=logos.length-1;
+const categories= getMe('logo-categories');
 const logoTile=getMe('feature');
 const tiles=document.querySelectorAll('.logo-container:not([draggable])');
 const pickUp= new Audio('pickup.mp3');
 const incorrect= new Audio('incorrect.mp3');
 const correct = new Audio('correct.mp3');
 const history= [];
-let transition= true;
-let gameOver=false;
 
 
 // *** Global Functions *** 
@@ -721,6 +699,18 @@ function getLogo(ind){
     history.push(logoIndex);
     getMe('feature').src=logos[logoIndex].source;   // display logo centre square
 }
+
+categories.addEventListener('change', () =>{
+    console.log(`Index: ${categories.selectedIndex}`);
+    if(categories.selectedIndex){
+        logos=logoArrays[categories.selectedIndex-1];
+        logoMax=logos.length-1;
+        history.length=0;
+        transition=true;
+        getLogo();
+        getTiles();
+    }
+});
 
 // drag listener for center square
 logoTile.addEventListener('dragend', (event) =>{event.target.style.opacity='1';});
@@ -778,16 +768,16 @@ console.log(logoMax);
 
 // reverse format- logos outside, name inside
 
-// transition logoTile with revolving door - variety of transitions
+// transition logoTile where height shrinks instead of width - variety of transitions
 
 // should you make target tile turn white after drop - if so... reset color again upon new tile
 
-// Snapchat drags funny
+// some Logos drag funny.. ex SnapChat
 
-// Sport team names repeat if name is reduced to city only (without team name) ex. New York Mets and Yankees
+// Sport team names repeat for cities (sports, landmarks) ex. Mets and Yankees - 2 New Yorks
 
 // remove sport teams from logos list
 
-// rename logos to business EVENTUALLY
-
 // replace as many sport team INITIALS as possible - try Wikipedia :)
+
+// changing categories immediately after a correct response fucks with puzzles completed total.
